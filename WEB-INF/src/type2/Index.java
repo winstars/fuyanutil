@@ -24,9 +24,9 @@ import jxl.*;
 import jxl.biff.*;
 import jxl.write.*;
 
-import models.GroupAndUser;
-import models.AreaAndDrink;
+import models.GroupAndUser2;
 import models.UserDrinkData;
+import models.UserPerformance;
 import utils.DBC;
 
 @Controller
@@ -36,11 +36,10 @@ public class Index {
 	public void index(PrintWriter out) {
 		//out.println(RB.getString("error.message.1"));
 	}
-/*
+
 	public void showInputGrid(Context c,int year,int month){
-		List<GroupAndUser> gaus = new LinkedList<GroupAndUser>();
-		List<AreaAndDrink> aads = new LinkedList<AreaAndDrink>();
-		Map<String,LinkedHashMap> urdMap = new LinkedHashMap<String,LinkedHashMap>();
+		List<GroupAndUser2> gaus = new LinkedList<GroupAndUser2>();
+		Map<String,UserPerformance> upMap = new LinkedHashMap<String,UserPerformance>();
 		DateTime today = new DateTime();
 		if(year==0){
 			year = today.getYear();
@@ -49,51 +48,68 @@ public class Index {
 			month = today.getMonthOfYear();
 		}
 		try{
-			DBC dbc = DBC.getInstance();
-			String[][] arrs1 = dbc.getArr("select ID,SYEAR,SMONTH,USERID,DRINKID,NUM from USERDRINKDATA where SYEAR=\'"+year+"\' and SMONTH=\'"+month+"\'");
-			String[][] arrs2 = dbc.getArr("select ID,GROUPID,GROUPNAME,USERNAME from GROUPANDUSER order by GROUPID,ID");
+			DBC dbc = DBC.getInstance();  
+			String[][] arrs1 = dbc.getArr("select ID,SYEAR,SMONTH,USERID,SALEVALUE,SALENUM,EXTRACTVALUE,EXTRAVALUE,GIVENVALUE,SALE1,SALE2,EXCHANGE from USERPERFORMANCE where SYEAR=\'"+year+"\' and SMONTH=\'"+month+"\'");
+			String[][] arrs2 = dbc.getArr("select ID,GROUPID,GROUPNAME,USERNAME,GROUPTYPE from GROUPANDUSER2 order by GROUPTYPE,GROUPID,ID");
 
 			if(arrs2!=null){
 				for(String[] arr : arrs2){
-					GroupAndUser gau = new GroupAndUser();
+					GroupAndUser2 gau = new GroupAndUser2();
 					gau.setId(Integer.parseInt(arr[0]));
 					gau.setGroupId(Integer.parseInt(arr[1]));
 					gau.setGroupName(arr[2]);
 					gau.setUserName(arr[3]);
+					gau.setGroupType(Integer.parseInt(arr[4]));
 					gaus.add(gau);
-				}
-			}
-
-			if(arrs3!=null){
-				for(String[] arr : arrs3){
-					AreaAndDrink aad = new AreaAndDrink();
-					aad.setId(Integer.parseInt(arr[0]));
-					aad.setAreaId(Integer.parseInt(arr[1]));
-					aad.setAreaName(arr[2]);
-					aad.setDrinkName(arr[3]);
-					aads.add(aad);
 				}
 			}
 
 			if(arrs1!=null){
 				for(String[] arr : arrs1){
-					LinkedHashMap urdMap2 = urdMap.get(arr[3]);
-					if(urdMap2==null){
-						urdMap2 = new LinkedHashMap<String,Integer>();
-						urdMap.put(arr[3]+"",urdMap2);
-					}
-					if(arr[5] == null || "".equals(arr[5]) || "0".equals(arr[5])) arr[5]="";
-					urdMap2.put(arr[4]+"",arr[5]);
+					UserPerformance up = new UserPerformance();
+					up.setId(Integer.parseInt(arr[0]));
+					up.setSyear(Integer.parseInt(arr[1]));
+					up.setSmonth(Integer.parseInt(arr[2]));
+					up.setUserid(Integer.parseInt(arr[3]));
+					up.setSaleValue(getNullValueForDouble(arr[4]));
+					up.setSaleNum(getNullValueForDouble(arr[5]));
+					up.setExtractValue(getNullValueForDouble(arr[6]));
+					up.setExtraValue(getNullValueForDouble(arr[7]));
+					up.setGrivenValue(getNullValueForDouble(arr[8]));
+					up.setSale1(getNullValueForDouble(arr[9]));
+					up.setSale2(getNullValueForDouble(arr[10]));
+					up.setExchange(getNullValueForDouble(arr[11]));
+					upMap.put(up.getUserid()+"", up);
 				}
 
-				//System.out.println("outter map size is "+urdMap.size());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		c.out("/title.vm");
 		c.out("/type1/showInputGrid.vm");
 	}
-
+	
+	private Integer getNullValueForInteger(String s){
+		Integer i = 0;
+		try{
+			i=Integer.parseInt(s);
+		}catch (Exception e) {
+			i=0;
+		}
+		return i;
+	}
+	
+	private Double getNullValueForDouble(String s){
+		Double i = 0d;
+		try{
+			i=Double.parseDouble(s);
+		}catch (Exception e) {
+			i=0d;
+		}
+		return i;
+	}
+/*
 	public void showInputGrid4Year(Context c,int year){
 		List<GroupAndUser> gaus = new LinkedList<GroupAndUser>();
 		List<AreaAndDrink> aads = new LinkedList<AreaAndDrink>();
