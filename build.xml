@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="GBK"?>
+<project name="TJJCAL" default="usage" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <!--
+         [	Property	Module	]
+     -->
+
+    <property file="../build-common.properties"/>
+
+
+    <property name="project.version" value="1.0"/>
+    <property name="project.home" location="."/>
+    <property name="project.author" value="qiukx"/>
+    <property name="webapp.name" value="tjjcal"/>
+
+    <property name="src.dir" location="${project.home}/src"/>
+    <property name="web.dir" location="${project.home}/web"/>
+
+
+    <property name="target.dir" location="${web.dir}/WEB-INF/classes"/>
+
+    <property name="lib.dir" location="${web.dir}/WEB-INF/lib"/>
+    <property name="tomcat.dir" location="D:\servers\tomcat-7.0.5\lib"/>
+
+    <!--
+         [	Target	Module	]
+     -->
+
+    <target name="usage">
+        <echo>clean Clean</echo>
+        <echo>compile Compile</echo>
+    </target>
+
+
+    <target name="clean">
+        <echo>Clean up the 'target' folder !</echo>
+        <delete dir="${target.dir}"/>
+    </target>
+
+	<target name="resolv-lib">
+		<echo>Finding Depency Libs!</echo>
+		<ivy:resolve file="ivy.xml"/>
+		<ivy:retrieve pattern="${lib.dir}/[conf]/[artifact](-[classifier]).[ext]" conf="*" />
+		<!--><ivy:retrieve/>-->
+	</target>
+
+    <target name="compile" depends="resolv-lib">
+        <echo>Compile the java source file !</echo>
+
+        <mkdir dir="${target.dir}"/>
+
+        <javac destdir="${target.dir}" encoding="UTF-8" debug="yes">
+            <src path="${src.dir}"/>
+            <classpath>
+                <fileset dir="${lib.dir}">
+	    			<include name="**/**/*.jar"/>
+				</fileset>
+        		<fileset dir="${tomcat.dir}">
+	    			<include name="*.jar"/>
+				</fileset>
+				<pathelement path="${classes.dir}" />
+            </classpath>
+        </javac>
+
+    </target>
+
+	<target name="build" depends="compile">
+		<echo>Copying compiled file to target place!</echo>
+        <copy todir="${target.dir}">
+            <fileset dir="${src.dir}">
+                <exclude name="**/*.properties"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+
+        <native2ascii encoding="UTF-8" src="${src.dir}" dest="${target.dir}" includes="**/*.properties"/>
+	</target>
+
+    <tstamp>
+        <format property="datestamp" pattern="yyyy-MM-dd"/>
+    </tstamp>
+</project>
