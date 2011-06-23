@@ -23,10 +23,10 @@ public class Index3 {
 		List<GroupAndUser2> gaus = new ArrayList<GroupAndUser2>();
 		try{
 			DBC dbc = DBC.getInstance();
-			String[][] arrs = dbc.getArr("select ID,GROUPID,GROUPNAME,USERNAME,GROUPTYPE from GROUPANDUSER2 order by GROUPID,ID");
+			String[][] arrs = dbc.getArr("select ID,GROUPID,GROUPNAME,USERNAME,GROUPTYPE from GROUPANDUSER2 order by GROUPTYPE,GROUPID,ID");
 			if(arrs!=null){
 				for(String[] arr : arrs){
-					GroupAndUser gau = new GroupAndUser();
+					GroupAndUser2 gau = new GroupAndUser2();
 					gau.setId(Integer.parseInt(arr[0]));
 					gau.setGroupId(Integer.parseInt(arr[1]));
 					gau.setGroupName(arr[2]);

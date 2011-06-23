@@ -36,7 +36,7 @@ public class Index {
 	public void index(PrintWriter out) {
 		//out.println(RB.getString("error.message.1"));
 	}
-
+/*
 	public void showInputGrid(Context c,int year,int month){
 		List<GroupAndUser> gaus = new LinkedList<GroupAndUser>();
 		List<AreaAndDrink> aads = new LinkedList<AreaAndDrink>();
@@ -52,7 +52,6 @@ public class Index {
 			DBC dbc = DBC.getInstance();
 			String[][] arrs1 = dbc.getArr("select ID,SYEAR,SMONTH,USERID,DRINKID,NUM from USERDRINKDATA where SYEAR=\'"+year+"\' and SMONTH=\'"+month+"\'");
 			String[][] arrs2 = dbc.getArr("select ID,GROUPID,GROUPNAME,USERNAME from GROUPANDUSER order by GROUPID,ID");
-			String[][] arrs3 = dbc.getArr("select ID,AREAID,AREANAME,DRINKNAME from AREAANDDRINK order by AREAID,ID");
 
 			if(arrs2!=null){
 				for(String[] arr : arrs2){
@@ -150,21 +149,6 @@ public class Index {
 		c.out("/type1/showInputGrid4Year.vm");
 	}
 
-/**
-	public void showInputGrid(Context c){
-		DateTime today = new DateTime();
-		int year = today.getYear();
-		int month = today.getMonthOfYear();
-		System.out.println(year+"_"+month);
-		showInputGrid(c,year,month);
-	}
-
-	public void showInputGrid(Context c,int month){
-		DateTime today = new DateTime();
-		int year = today.getYear();
-		showInputGrid(c,year,month);
-	}
-**/
 	public void update(PrintWriter out,Context c,int year,int month,String id,String num){
 		if(num==null|| "".equals(num)) num="0";
 		if(id!=null && !"".equals(id)){
@@ -290,12 +274,12 @@ public class Index {
             response.addHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
             int fileLength = (int) xlsFile.length();
             response.setContentLength(fileLength);
-            /*如果文件长度大于0*/
+            //如果文件长度大于0
             if (fileLength != 0) {
-                /*创建输入流*/
+                //创建输入流
                 InputStream inStream = new FileInputStream(xlsFile);
                 byte[] buf = new byte[4096];
-                /*创建输出流*/
+                //创建输出流
                 ServletOutputStream servletOS = response.getOutputStream();
                 int readLength;
                 while (((readLength = inStream.read(buf)) != -1)) {
@@ -310,4 +294,5 @@ public class Index {
 			e.printStackTrace();
 		}
 	}
+	*/
 }
