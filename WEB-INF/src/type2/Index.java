@@ -87,7 +87,7 @@ public class Index {
 			e.printStackTrace();
 		}
 		c.out("/title.vm");
-		c.out("/type1/showInputGrid.vm");
+		c.out("/type2/showInputGrid.vm");
 	}
 	
 	private Integer getNullValueForInteger(String s){

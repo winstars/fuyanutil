@@ -7,7 +7,7 @@ var j = jQuery.noConflict();
 
 function gotoNextMonth () {
 	var currYear = ${year};
-	var currMonth = ${month};
+	var currMonth = ${};
 	if(currMonth==12){
 		currYear++;
 		currMonth=1;
@@ -67,11 +67,23 @@ selected
 </select>月<input type="button" value="跳转" onclick="gotoMonth()">&nbsp;&nbsp;&nbsp;<a href='Index.showInputGrid4Year'>查看年度</a></div>
 <div style="text-align:center;valign:middle;">
 <table border=1>
-	
+<tr>
+<td></td><td></td><td></td><td></td><td></td>
+</tr>
 #foreach (${gau} in ${gaus})
 #set($userid=${gau.id})
 <tr>
-<td>${gau.groupName}</td><td>${gau.userName}</td>
+<td>
+#if(${gau.groupType}==1)
+后勤管理人员
+#else
+#if(${gau.groupType}==2)
+业务员
+#else
+门店人员
+#end
+#end
+</td><td>${gau.userName}</td>
 
 <td><input class="input"></td>
 
