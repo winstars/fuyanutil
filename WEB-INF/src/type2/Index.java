@@ -87,6 +87,7 @@ public class Index {
 			e.printStackTrace();
 		}
 		c.out("/title.vm");
+        c.out("/type2/typeset.vm");
 		c.out("/type2/showInputGrid.vm");
 	}
 	

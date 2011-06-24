@@ -39,6 +39,7 @@ public class Index3 {
 			e.printStackTrace();
 		}
 		c.out("/title.vm");
+        c.out("/type2/typeset.vm");
 		c.out("/setting/SettingGroupAndUser2.vm");
 	}
 

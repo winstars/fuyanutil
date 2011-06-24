@@ -68,26 +68,37 @@ selected
 <div style="text-align:center;valign:middle;">
 <table border=1>
 <tr>
-<td></td><td></td><td></td><td></td><td></td>
+<td>人员类别</td><td>姓名</td><td>本月销售<br/>数量</td><td>1-本月销售<br/>数量累计</td><td>本月销售<br/>金额</td><td>1-本月销售<br/>金额累计</td>
+    <td>考核完成情况<br/>(完成或未完成)</td><td>计提金额</td><td>考核奖励</td><td>本月奖励</td><td>累计未奖励</td><td>补发奖励</td>
 </tr>
 #foreach (${gau} in ${gaus})
 #set($userid=${gau.id})
+#if(${gau.groupType}==1)
 <tr>
 <td>
-#if(${gau.groupType}==1)
 后勤管理人员
+</td><td>${gau.userName}</td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
+    <td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
+</tr>
 #else
 #if(${gau.groupType}==2)
+<tr>
+<td>
 业务员
-#else
-门店人员
-#end
-#end
-</td><td>${gau.userName}</td>
-
-<td><input class="input"></td>
-
+</td><td>${gau.userName}</td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
+    <td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
 </tr>
+#else
+<tr>
+<td rowspan="2">
+门店人员
+</td><td rowspan="2">${gau.userName}</td><td>销售</td><td><input class="input"></td><td>提成</td><td><input class="input"></td><td colspan="6" rowspan="2">&nbsp;</td>
+</tr>
+<tr>
+<td>提货券</td><td><input class="input"></td><td>提成</td><td><input class="input"></td>
+</tr>
+#end
+#end
 #end
 </table>
 </div>
