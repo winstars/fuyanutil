@@ -1,6 +1,7 @@
 package utils;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -11,6 +12,7 @@ import org.logicalcobwebs.proxool.ProxoolDataSource;
 //import douyu.mvc.Controller;
 
 import java.io.PrintWriter;
+
 /**
  * User: qiukx
  * Date: 2011-6-13
@@ -22,33 +24,40 @@ public class DBC {
     private Connection connection = null;
     private DataSource dataSource = null;
 
-	//public void index(PrintWriter out) {
-	//	out.println("error");
-	//}
+    //public void index(PrintWriter out) {
+    //	out.println("error");
+    //}
 
-	private static DBC instance = new DBC();
+    private static DBC instance = new DBC();
 
-	public static DBC getInstance(){
-		return instance;
-	}
+    public static DBC getInstance() {
+        return instance;
+    }
 
     public DBC() {
-		try{
-			ProxoolDataSource ds = new ProxoolDataSource();
-			this.dataSource = ds;
-			ds.setDriver("org.h2.Driver");
-			ds.setDriverUrl("jdbc:h2:tcp://localhost/~/fuyanutil");
-			ds.setUser("sa");
-			ds.setPassword("");
-			ds.setAlias("DB");
-			ds.setPrototypeCount(1);
-			ds.setMaximumConnectionCount(10);
-			ds.setMinimumConnectionCount(1);
-			ds.setTrace(true);
-			ds.setVerbose(true);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+//        String currentDir = String.class.getResource("").getPath();
+//        System.out.println(currentDir);
+        try {
+            ProxoolDataSource ds = new ProxoolDataSource();
+            String currentDir = ds.getClass().getResource("/").getPath();
+            currentDir = new File(currentDir).getParentFile().getAbsolutePath();
+            System.out.println(currentDir);
+            this.dataSource = ds;
+            ds.setDriver("org.h2.Driver");
+//            ds.setDriverUrl("jdbc:h2:tcp://localhost/fuyanutil");
+//            ds.setDriverUrl("jdbc:h2:tcp://localhost/fuyanutil");
+            ds.setDriverUrl("jdbc:h2:file:"+currentDir+"/fuyanutil");
+            ds.setUser("sa");
+            ds.setPassword("");
+            ds.setAlias("DB");
+            ds.setPrototypeCount(1);
+            ds.setMaximumConnectionCount(10);
+            ds.setMinimumConnectionCount(1);
+            ds.setTrace(true);
+            ds.setVerbose(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -58,7 +67,7 @@ public class DBC {
      */
     public Connection getConnection() {
         try {
-            if (connection==null || connection.isClosed()) {
+            if (connection == null || connection.isClosed()) {
                 connection = dataSource.getConnection();
             }
         } catch (SQLException e) {
@@ -108,8 +117,8 @@ public class DBC {
         return null;//TODO 数据库新增操作  将返回一个新增的ID  //暂时不作返回
     }
 
-	public String insertDB(PreparedStatement preparedStatement) throws SQLException {
-		try {
+    public String insertDB(PreparedStatement preparedStatement) throws SQLException {
+        try {
             System.out.println("\n------执行INSERT by parepared statement:------");
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -127,7 +136,7 @@ public class DBC {
             }
         }
         return null;//TODO 数据库新增操作  将返回一个新增的ID  //暂时不作返回
-	}
+    }
 
     /**
      * 执行update操作
@@ -329,8 +338,8 @@ public class DBC {
         return new int[]{cols, rows};
     }
 
-	public Statement getStatement() throws SQLException{
-		getConnection();
-		return connection.createStatement();
-	}
+    public Statement getStatement() throws SQLException {
+        getConnection();
+        return connection.createStatement();
+    }
 }

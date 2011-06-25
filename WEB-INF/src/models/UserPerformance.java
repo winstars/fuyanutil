@@ -1,141 +1,182 @@
 package models;
 
 public class UserPerformance {
-	private int id;
+    private int id;
 
-	private int syear;
+    private int syear;
 
-	private int smonth;
+    private int smonth;
 
-	private int userid;
+    private int userid;
 
-	private double saleValue;
+    private double saleValue;
 
-	private double saleNum;
+    private double saleValueSum = 0.0;
 
-	private double extractValue;
+    private double saleNum;
 
-	private double extraValue;
+    private double saleNumSum = 0.0;
 
-	private double givenValue;
+    private int completeStatus;
 
-	private double sale1;
+    private double extractValue;
 
-	private double sale2;
+    private double extraValue;
 
-	private double exchange;
+    private double givenValue;
 
-	public void set(int id, int syear, int smonth, int userid,
-			double saleValue, double saleNum, double extractValue,
-			double extraValue, double givenValue, double sale1, double sale2,
-			double exchange) {
-		this.id = id;
-		this.syear = syear;
-		this.smonth = smonth;
-		this.userid = userid;
-		this.saleValue = saleValue;
-		this.saleNum = saleNum;
-		this.extractValue = extractValue;
-		this.extraValue = extraValue;
-		this.givenValue = givenValue;
-		this.sale1 = sale1;
-		this.sale2 = sale2;
-		this.exchange = exchange;
-	}
+    private double sale1;
 
-	public int getId() {
-		return this.id;
-	}
+    private double sale2;
 
-	public int getSyear() {
-		return this.syear;
-	}
+    private double exchange;
 
-	public int getSmonth() {
-		return this.smonth;
-	}
+    private double ungivenValue = 0;
 
-	public int getUserid() {
-		return this.userid;
-	}
+    public void set(int id, int syear, int smonth, int userid,
+                    double saleValue, double saleNum, int completeStatus, double extractValue,
+                    double extraValue, double givenValue, double sale1, double sale2,
+                    double exchange) {
+        this.id = id;
+        this.syear = syear;
+        this.smonth = smonth;
+        this.userid = userid;
+        this.saleValue = saleValue;
+        this.saleNum = saleNum;
+        this.completeStatus = completeStatus;
+        this.extractValue = extractValue;
+        this.extraValue = extraValue;
+        this.givenValue = givenValue;
+        this.sale1 = sale1;
+        this.sale2 = sale2;
+        this.exchange = exchange;
+    }
 
-	public double getSaleValue() {
-		return this.saleValue;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public double getSaleNum() {
-		return this.saleNum;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public double getExtractValue() {
-		return this.extractValue;
-	}
+    public int getSyear() {
+        return syear;
+    }
 
-	public double getExtraValue() {
-		return this.extraValue;
-	}
+    public void setSyear(int syear) {
+        this.syear = syear;
+    }
 
-	public double getGivenValue() {
-		return this.givenValue;
-	}
+    public int getSmonth() {
+        return smonth;
+    }
 
-	public double getSale1() {
-		return this.sale1;
-	}
+    public void setSmonth(int smonth) {
+        this.smonth = smonth;
+    }
 
-	public double getSale2() {
-		return this.sale2;
-	}
+    public int getUserid() {
+        return userid;
+    }
 
-	public double getExchange() {
-		return this.exchange;
-	}
+    public void setUserid(int userid) {
+        this.userid = userid;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public double getSaleValue() {
+        return saleValue;
+    }
 
-	public void setSyear(int syear) {
-		this.syear = syear;
-	}
+    public void setSaleValue(double saleValue) {
+        this.saleValue = saleValue;
+    }
 
-	public void setSmonth(int smonth) {
-		this.smonth = smonth;
-	}
+    public double getSaleNum() {
+        return saleNum;
+    }
 
-	public void setUserid(int userid) {
-		this.userid = userid;
-	}
+    public void setSaleNum(double saleNum) {
+        this.saleNum = saleNum;
+    }
 
-	public void setSaleValue(double saleValue) {
-		this.saleValue = saleValue;
-	}
+    public int getCompleteStatus() {
+        return completeStatus;
+    }
 
-	public void setSaleNum(double saleNum) {
-		this.saleNum = saleNum;
-	}
+    public void setCompleteStatus(int completeStatus) {
+        this.completeStatus = completeStatus;
+    }
 
-	public void setExtractValue(double extractValue) {
-		this.extractValue = extractValue;
-	}
+    public double getExtractValue() {
+        return extractValue;
+    }
 
-	public void setExtraValue(double extraValue) {
-		this.extraValue = extraValue;
-	}
+    public void setExtractValue(double extractValue) {
+        this.extractValue = extractValue;
+    }
 
-	public void setGrivenValue(double givenValue) {
-		this.givenValue = givenValue;
-	}
+    public double getExtraValue() {
+        return extraValue;
+    }
 
-	public void setSale1(double sale1) {
-		this.sale1 = sale1;
-	}
+    public void setExtraValue(double extraValue) {
+        this.extraValue = extraValue;
+    }
 
-	public void setSale2(double sale2) {
-		this.sale2 = sale2;
-	}
+    public double getGivenValue() {
+        return givenValue;
+    }
 
-	public void setExchange(double exchange) {
-		this.exchange = exchange;
-	}
+    public void setGivenValue(double givenValue) {
+        this.givenValue = givenValue;
+    }
+
+    public double getSale1() {
+        return sale1;
+    }
+
+    public void setSale1(double sale1) {
+        this.sale1 = sale1;
+    }
+
+    public double getSale2() {
+        return sale2;
+    }
+
+    public void setSale2(double sale2) {
+        this.sale2 = sale2;
+    }
+
+    public double getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(double exchange) {
+        this.exchange = exchange;
+    }
+
+    public double getSaleValueSum() {
+        return saleValueSum;
+    }
+
+    public void setSaleValueSum(double saleValueSum) {
+        this.saleValueSum = saleValueSum;
+    }
+
+    public double getSaleNumSum() {
+        return saleNumSum;
+    }
+
+    public void setSaleNumSum(double saleNumSum) {
+        this.saleNumSum = saleNumSum;
+    }
+
+    public double getUngivenValue() {
+        return ungivenValue;
+    }
+
+    public void setUngivenValue(double ungivenValue) {
+        this.ungivenValue = ungivenValue;
+    }
 }

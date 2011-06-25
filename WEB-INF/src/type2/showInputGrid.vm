@@ -1,112 +1,364 @@
 <HTML>
 <HEAD>
-<TITLE>葡萄酒中心月度绩效考核(${year}年${month}月)</TITLE>
-<script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
-<script language="javascript">
-var j = jQuery.noConflict();
+    <TITLE>葡萄酒中心月度绩效考核(${year}年${month}月)</TITLE>
+    <script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
+    <script language="javascript">
+        var j = jQuery.noConflict();
 
-function gotoNextMonth () {
-	var currYear = ${year};
-	var currMonth = ${month};
-	if(currMonth==12){
-		currYear++;
-		currMonth=1;
-	}else{
-		currMonth++;
-	}
-	document.location.href="Index.showInputGrid?month="+currMonth+"&year="+currYear;
-}
+        function gotoNextMonth() {
+            var currYear = ${year};
+            var currMonth = ${month};
+            if (currMonth == 12) {
+                currYear++;
+                currMonth = 1;
+            } else {
+                currMonth++;
+            }
+            document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+        }
 
-function gotoPrevMonth () {
-	var currYear = ${year};
-	var currMonth = ${month};
-	if(currMonth==1){
-		currYear--;
-		currMonth=12;
-	}else{
-		currMonth--;
-	}
-	document.location.href="Index.showInputGrid?month="+currMonth+"&year="+currYear;
-}
+        function gotoPrevMonth() {
+            var currYear = ${year};
+            var currMonth = ${month};
+            if (currMonth == 1) {
+                currYear--;
+                currMonth = 12;
+            } else {
+                currMonth--;
+            }
+            document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+        }
 
-function gotoCurrMonth () {
-	document.location.href="Index.showInputGrid";
-}
+        function gotoCurrMonth() {
+            document.location.href = "Index.showInputGrid";
+        }
 
-function gotoMonth () {
-	document.location.href="Index.showInputGrid?month="+j('#smonth')[0].value+"&year="+j('#syear')[0].value;
-}
+        function gotoMonth() {
+            document.location.href = "Index.showInputGrid?month=" + j('#smonth')[0].value + "&year=" + j('#syear')[0].value;
+        }
 
-function saveRow(){
-    var id=
-}
-</script>
-<style>
-.input{
-	width:60px
-}
-</style>
+        function saveRow(userid, groupType) {
+            var saleNum = getDouble(j('.saleNum.i' + userid + '')[0].value);
+            var saleValue = getDouble(j('.saleValue.i' + userid + '')[0].value);
+            var completeStatus = getInt(j('.completeStatus.i' + userid + '')[0].value);
+            var extractValue = getDouble(j('.extractValue.i' + userid + '')[0].value);
+            var extraValue;
+            if (groupType == 1) {
+                extraValue = (extractValue * 0.05).toFixed(2);
+            } else {
+                if (extractValue <= 5000) {
+                    extraValue = getDouble(extractValue * 0.02).toFixed(2);
+                } else if (extractValue <= 15000) {
+                    extraValue = getDouble(extractValue * 0.04).toFixed(2);
+                } else if (extractValue <= 25000) {
+                    extraValue = getDouble(extractValue * 0.05).toFixed(2);
+                } else {
+                    extraValue = getDouble(extractValue * 0.1).toFixed(2);
+                }
+            }
+            var givenValue = getDouble(j('.givenValue.i' + userid + '')[0].value);
+            var exchange = getDouble(j('.exchange.i' + userid + '')[0].value);
+
+
+            j.post('Index.update', {
+                        year: $year,
+                        month:$month,
+                        userid:userid,
+                        saleNum:saleNum,
+                        saleValue:saleValue,
+                        completeStatus:completeStatus,
+                        extractValue:extractValue,
+                        extraValue:extraValue,
+                        givenValue:givenValue,
+                        exchange:exchange
+                    }, function(data) {
+                if (data == "1") {
+//                    alert(1);
+                    //window.location.reload()
+                } else {
+                    alert("数据错误！");
+                }
+            });
+        }
+
+        function saveRow2(userid) {
+            var sale1 = getDouble(j('.sale1' + userid + '')[0].value);
+            var sale2 = getDouble(j('.sale2' + userid + '')[0].value);
+
+            j.post('Index.update2', {
+                        year: $year,
+                        month:$month,
+                        userid:userid,
+                        sale1:sale1,
+                        sale2:sale2
+                    }, function(data) {
+                if (data == "1") {
+//                    alert(1);
+                    //window.location.reload()
+                } else {
+                    alert("数据错误！");
+                }
+            });
+        }
+
+        function getInt(obj) {
+            var a;
+            try {
+                a = parseInt(obj);
+            } catch(e) {
+                a = 0;
+            }
+            if (isNaN(a))a = 0;
+            return a;
+        }
+        function getDouble(obj) {
+            var a;
+            try {
+                a = parseFloat(obj);
+            } catch(e) {
+                a = 0.0;
+            }
+            if (isNaN(a))a = 0.0;
+            return a;
+        }
+
+        function sumAll(){
+            j(".addid").each(function(index,obj){
+                var userid=obj.attributes['addid'].value;
+                var pastNum = j(".saleNumSum"+userid)[0];
+                var nowtNum = j(".saleNum"+userid)[0];
+                pastNum.value=(getDouble(obj.value)+getDouble(nowtNum.value)).toFixed(2);
+                nowtNum.value = getDouble(nowtNum.value);
+
+                var pastValue = j(".saleValueSum"+userid)[0];
+                var nowtValue = j(".saleValue"+userid)[0];
+                var pastAValue = j(".pastsaleValueSum"+userid)[0];
+                pastValue.value=(getDouble(pastAValue.value)+getDouble(nowtValue.value)).toFixed(2);
+                nowtValue.value = getDouble(nowtValue.value);
+
+                var pastUngivenSum = j(".ungivenSumPast"+userid)[0];
+                var ungivenSum = j(".ungivenSum"+userid)[0];
+                var extractValue = j(".extractValue"+userid)[0];
+                var extraValue = j(".extraValue"+userid)[0];
+                var givenValue = j(".givenValue"+userid)[0];
+                var exchange = j(".exchange"+userid)[0];
+                ungivenSum.value=(getDouble(pastUngivenSum.value)+getDouble(extraValue.value)-getDouble(givenValue.value)-getDouble(exchange.value)).toFixed(2);
+                exchange.value = getDouble(exchange.value);
+                givenValue.value = getDouble(givenValue.value);
+                extraValue.value = getDouble(extraValue.value);
+                ungivenSum.value = getDouble(ungivenSum.value);
+                extractValue.value = getDouble(extractValue.value);
+            });
+
+            j(".sale").each(function(index,obj){
+                var userid=obj.attributes['saleid'].value;
+                var sale1=j(".sale1"+userid)[0];
+                var sale1tip=j(".sale1tip"+userid)[0];
+                var sale2=j(".sale2"+userid)[0];
+                var sale2tip=j(".sale2tip"+userid)[0];
+
+                sale1tip.value = (getDouble(sale1.value)*2).toFixed(2);
+                sale2tip.value = (getDouble(sale2.value)*0.5).toFixed(2);
+            })
+        }
+
+        j(document).ready(sumAll);
+    </script>
+    <style>
+        .input {
+            width: 60px
+        }
+    </style>
 </HEAD>
 
 <BODY BGCOLOR="white">
 <div style="text-align:center;valign:middle;font-size:26px"><p><b>葡萄酒中心月度绩效考核(${year}年${month}月)</b></p></div>
 <br><br>
-<div style="text-align:center;valign:middle;"><input type="button" value="上月" onclick="gotoPrevMonth()">&nbsp;&nbsp;&nbsp;<input type="button" value="本月" onclick="gotoCurrMonth()">&nbsp;&nbsp;&nbsp;<input type="button" value="下月" onclick="gotoNextMonth()">&nbsp;&nbsp;&nbsp;<select id='syear'>
-#foreach($y in [2011..2012])
-<option value='$y'
-#if($year == $y)
-selected
-#end
->$y</option>
-#end
+
+<div style="text-align:center;valign:middle;"><input type="button" value="上月" onclick="gotoPrevMonth()">&nbsp;&nbsp;&nbsp;<input
+        type="button" value="本月" onclick="gotoCurrMonth()">&nbsp;&nbsp;&nbsp;<input type="button" value="下月"
+                                                                                    onclick="gotoNextMonth()">&nbsp;&nbsp;&nbsp;<select
+        id='syear'>
+    #foreach($y in [2011..2012])
+        <option value='$y'
+            #if($year == $y)
+                selected
+            #end
+                >$y</option>
+    #end
 </select>年<select id='smonth'>
-#foreach($i in[1..12])
-<option value='$i'
-#if($month == $i)
-selected
-#end
->$i</option>
-#end
-</select>月<input type="button" value="跳转" onclick="gotoMonth()">&nbsp;&nbsp;&nbsp;<a href='Index.showInputGrid4Year'>查看年度</a></div>
-<div style="text-align:center;valign:middle;">
-<table border=1>
-<tr>
-<td>人员类别</td><td>姓名</td><td>本月销售<br/>数量</td><td>1-本月销售<br/>数量累计</td><td>本月销售<br/>金额</td><td>1-本月销售<br/>金额累计</td>
-    <td>考核完成情况<br/>(完成或未完成)</td><td>计提金额</td><td>考核奖励</td><td>本月奖励</td><td>累计未奖励</td><td>补发奖励</td>
-</tr>
-#foreach (${gau} in ${gaus})
-#set($userid=${gau.id})
-#if(${gau.groupType}==1)
-<tr>
-<td>
-后勤管理人员
-</td><td>${gau.userName}</td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
-    <td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
-</tr>
-#else
-#if(${gau.groupType}==2)
-<tr>
-<td>
-业务员
-</td><td>${gau.userName}</td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
-    <td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td><td><input class="input"></td>
-</tr>
-#else
-<tr>
-<td rowspan="2">
-门店人员
-</td><td rowspan="2">${gau.userName}</td><td>销售</td><td><input class="input"></td><td>提成</td><td><input class="input"></td><td colspan="6" rowspan="2">&nbsp;</td>
-</tr>
-<tr>
-<td>提货券</td><td><input class="input"></td><td>提成</td><td><input class="input"></td>
-</tr>
-#end
-#end
-#end
-</table>
+    #foreach($i in[1..12])
+        <option value='$i'
+            #if($month == $i)
+                selected
+            #end
+                >$i</option>
+    #end
+</select>月<input type="button" value="跳转" onclick="gotoMonth()">
 </div>
 <div style="text-align:center;valign:middle;">
-导出  ---->   <a href='Index.exportExcel'>导出本月</a>&nbsp;&nbsp;&nbsp;<a href='Index.exportExcel4Currency'>导出1-本月</a></div>
+    <table border=1>
+        <tr>
+            <td>人员类别</td>
+            <td>姓名</td>
+            <td>本月销售<br/>数量</td>
+            <td>1-本月销售<br/>数量累计</td>
+            <td>本月销售<br/>金额</td>
+            <td>1-本月销售<br/>金额累计</td>
+            <td>考核完成情况<br/>(完成或未完成)</td>
+            <td>计提金额</td>
+            <td>考核奖励</td>
+            <td>本月奖励</td>
+            <td>累计未奖励</td>
+            <td>补发奖励</td>
+        </tr>
+        #foreach (${gau} in ${gaus})
+            #set($userid=${gau.id})
+            #if(${gau.groupType}==1)
+                <tr>
+                    <td>
+                        后勤管理人员
+                    </td>
+                    <td>${gau.userName}</td>
+                    <td><input class="input i${userid} saleNum saleNum$userid" name="saleNum"
+                               value='$!upMap.get("$userid").getSaleNum()'
+                               onblur="javascript:saveRow('$userid',1);sumAll();"></td>
+                    <td><input class="input i${userid} saleNumSum saleNumSum$userid" name="saleNumSum" readonly value=''>
+                        <input type="hidden" class="input i${userid} saleNumSum addid" name="saleNumSum"  addid="$userid" readonly
+                               value='$!saleNumSumMap.get("$userid")'></td>
+                    <td><input class="input i${userid} saleValue saleValue$userid" name="saleValue"
+                               value='$!upMap.get("$userid").getSaleValue()'
+                               onblur="javascript:saveRow('$userid',1);sumAll();"></td>
+                    <td><input class="input i${userid} saleValueSum saleValueSum$userid" name="saleValueSum" readonly value=''>
+                        <input type="hidden" class="input i${userid} pastsaleValueSum pastsaleValueSum$userid" name="saleValueSum" readonly
+                               value='$!saleValueSumMap.get("$userid")'></td>
+                    <td><select name="completeStatus" class="i${userid} completeStatus"
+                                onblur="javascript:saveRow('$userid',1);sumAll();">
+                        <option value="0"
+                            #if($!upMap.get("$userid").getCompleteStatus()==0)
+                                selected
+                            #end
+                                ></option>
+                        <option value="1"
+                            #if($!upMap.get("$userid").getCompleteStatus()==1)
+                                selected
+                            #end
+                                >完成
+                        </option>
+                        <option value="2"
+                            #if($!upMap.get("$userid").getCompleteStatus()==2)
+                                selected
+                            #end
+                                >未完成
+                        </option>
+                    </select></td>
+                    <td><input class="input i${userid} extractValue extractValue$userid" name="extractValue"
+                               value='$!upMap.get("$userid").getExtractValue()'
+                               onblur="javascript:saveRow('$userid',1);sumAll();">
+                    </td>
+                    <td><input class="input i${userid} extraValue extraValue$userid" name="extraValue"
+                               value='$!upMap.get("$userid").getExtraValue()' readonly>
+                    </td>
+                    <td><input class="input i${userid} givenValue givenValue$userid" name="givenValue"
+                               value='$!upMap.get("$userid").getGivenValue()'
+                               onblur="javascript:saveRow('$userid',1);sumAll();">
+                    </td>
+                    <td><input class="input i${userid} ungivenSum ungivenSum$userid" name="ungivenSum" readonly
+                               value=''>
+                        <input type="hidden" class="input i${userid} ungivenSumPast ungivenSumPast$userid" name="ungivenSum" readonly
+                               value='$!ungivenValueMap.get("$userid")'></td>
+                    <td><input class="input i${userid} exchange exchange$userid" name="exchange"
+                               onblur="javascript:saveRow('$userid',1);sumAll();"
+                               value='$!upMap.get("$userid").getExchange()'>
+                    </td>
+                </tr>
+            #else
+                #if(${gau.groupType}==2)
+                    <tr>
+                        <td>
+                            业务员
+                        </td>
+                        <td>${gau.userName}</td>
+                    <td><input class="input i${userid} saleNum saleNum$userid" name="saleNum"
+                               value='$!upMap.get("$userid").getSaleNum()'
+                               onblur="javascript:saveRow('$userid',2);sumAll();"></td>
+                    <td><input class="input i${userid} saleNumSum saleNumSum$userid" name="saleNumSum" readonly value=''>
+                        <input type="hidden" class="input i${userid} saleNumSum addid" name="saleNumSum"  addid="$userid" readonly
+                               value='$!saleNumSumMap.get("$userid")'></td>
+                    <td><input class="input i${userid} saleValue saleValue$userid" name="saleValue"
+                               value='$!upMap.get("$userid").getSaleValue()'
+                               onblur="javascript:saveRow('$userid',2);sumAll();"></td>
+                    <td><input class="input i${userid} saleValueSum saleValueSum$userid" name="saleValueSum" readonly value=''>
+                        <input type="hidden" class="input i${userid} pastsaleValueSum pastsaleValueSum$userid" name="saleValueSum" readonly
+                               value='$!saleValueSumMap.get("$userid")'></td>
+                    <td><select name="completeStatus" class="i${userid} completeStatus"
+                                onblur="javascript:saveRow('$userid',2);sumAll();">
+                        <option value="0"
+                            #if($!upMap.get("$userid").getCompleteStatus()==0)
+                                selected
+                            #end
+                                ></option>
+                        <option value="1"
+                            #if($!upMap.get("$userid").getCompleteStatus()==1)
+                                selected
+                            #end
+                                >完成
+                        </option>
+                        <option value="2"
+                            #if($!upMap.get("$userid").getCompleteStatus()==2)
+                                selected
+                            #end
+                                >未完成
+                        </option>
+                    </select></td>
+                    <td><input class="input i${userid} extractValue extractValue$userid" name="extractValue"
+                               value='$!upMap.get("$userid").getExtractValue()'
+                               onblur="javascript:saveRow('$userid',2);sumAll();">
+                    </td>
+                    <td><input class="input i${userid} extraValue extraValue$userid" name="extraValue"
+                               value='$!upMap.get("$userid").getExtraValue()' readonly>
+                    </td>
+                    <td><input class="input i${userid} givenValue givenValue$userid" name="givenValue"
+                               value='$!upMap.get("$userid").getGivenValue()'
+                               onblur="javascript:saveRow('$userid',2);sumAll();">
+                    </td>
+                    <td><input class="input i${userid} ungivenSum ungivenSum$userid" name="ungivenSum" readonly
+                               value=''>
+                        <input type="hidden" class="input i${userid} ungivenSumPast ungivenSumPast$userid" name="ungivenSum" readonly
+                               value='$!ungivenValueMap.get("$userid")'></td>
+                    <td><input class="input i${userid} exchange exchange$userid" name="exchange"
+                               onblur="javascript:saveRow('$userid',2);sumAll();"
+                               value='$!upMap.get("$userid").getExchange()'>
+                    </td>
+                    </tr>
+                #else
+                    <tr>
+                        <td rowspan="2">
+                            门店人员
+                        </td>
+                        <td rowspan="2">${gau.userName}</td>
+                        <td>销售</td>
+                        <td><input class="input sale1$userid" name="sale1" value='$!upMap.get("$userid").getSale1()' onblur="javascript:saveRow2('$userid');sumAll();"></td>
+                        <td>提成</td>
+                        <td><input class="input sale1tip$userid sale" saleid="$userid" name="sale1tip" readonly></td>
+                        <td colspan="6" rowspan="2">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>提货券</td>
+                        <td><input class="input sale2$userid" name="sale2" value='$!upMap.get("$userid").getSale2()' onblur="javascript:saveRow2('$userid');sumAll();"></td>
+                        <td>提成</td>
+                        <td><input class="input sale2tip$userid" name="sale2tip" readonly></td>
+                    </tr>
+                #end
+            #end
+        #end
+    </table>
+</div>
+<div style="text-align:center;valign:middle;">
+    导出 ----> <a href='Index.exportExcel?year=$year&month=$month'>导出本月</a></div>
+</div>
+<div style="text-align:center;valign:middle;">
+    <span style="color: red;">注意，本表数字四舍五入保留到小数点2位</span>
 </div>
 </BODY>
 

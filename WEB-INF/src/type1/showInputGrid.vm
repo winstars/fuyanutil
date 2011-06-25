@@ -1,164 +1,175 @@
 <HTML>
 <HEAD>
-<TITLE>录入月度合并各部门销售清单(${year}年${month}月)</TITLE>
-<script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
-<script language="javascript">
-var j = jQuery.noConflict();
-function changeDD (obj) {
-	j.post('Index.update', {
-		id: obj.id,
-		num: obj.value,
-		year:${year},
-		month:${month}
-	}, function(data) {
-		//alert(data);
-		if(data=="1"){
-			//window.location.reload()
-		}else{
-			alert("数据错误！");
-		}
-	});
-}
+    <TITLE>录入月度合并各部门销售清单(${year}年${month}月)</TITLE>
+    <script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
+    <script language="javascript">
+        var j = jQuery.noConflict();
+        function changeDD(obj) {
+            j.post('Index.update', {
+                        id: obj.id,
+                        num: obj.value,
+                        year:${year},
+                        month:${month}
+                    }, function(data) {
+                //alert(data);
+                if (data == "1") {
+                    //window.location.reload()
+                } else {
+                    alert("数据错误！");
+                }
+            });
+        }
 
-function gotoNextMonth () {
-	var currYear = ${year};
-	var currMonth = ${month};
-	if(currMonth==12){
-		currYear++;
-		currMonth=1;
-	}else{
-		currMonth++;
-	}
-	document.location.href="Index.showInputGrid?month="+currMonth+"&year="+currYear;
-}
+        function gotoNextMonth() {
+            var currYear = ${year};
+            var currMonth = ${month};
+            if (currMonth == 12) {
+                currYear++;
+                currMonth = 1;
+            } else {
+                currMonth++;
+            }
+            document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+        }
 
-function gotoPrevMonth () {
-	var currYear = ${year};
-	var currMonth = ${month};
-	if(currMonth==1){
-		currYear--;
-		currMonth=12;
-	}else{
-		currMonth--;
-	}
-	document.location.href="Index.showInputGrid?month="+currMonth+"&year="+currYear;
-}
+        function gotoPrevMonth() {
+            var currYear = ${year};
+            var currMonth = ${month};
+            if (currMonth == 1) {
+                currYear--;
+                currMonth = 12;
+            } else {
+                currMonth--;
+            }
+            document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+        }
 
-function gotoCurrMonth () {
-	document.location.href="Index.showInputGrid";
-}
+        function gotoCurrMonth() {
+            document.location.href = "Index.showInputGrid";
+        }
 
-function gotoMonth () {
-	document.location.href="Index.showInputGrid?month="+j('#smonth')[0].value+"&year="+j('#syear')[0].value;
-}
+        function gotoMonth() {
+            document.location.href = "Index.showInputGrid?month=" + j('#smonth')[0].value + "&year=" + j('#syear')[0].value;
+        }
 
-j(document).ready(sum);
+        j(document).ready(sum);
 
-function sum() {
-	var totalSum = 0;
-	j('input.colsum').each(function(index,obj){
-		var colIndex = obj.attributes['countcol'].value;
-		var val = 0;
-		j('input[colid='+colIndex+']').each(function(index2,obj2){
-			if(obj2.value!='' && obj2.value!=null && obj2.value!='undefined' && obj2.value.length!=0){
-				val+=parseInt(obj2.value);
-			}
-		})
-		if(val!=0){
-			obj.value=val;
-			totalSum+=val;
-		}else{
-			obj.value='';
-		}
-	});
+        function sum() {
+            var totalSum = 0;
+            j('input.colsum').each(function(index, obj) {
+                var colIndex = obj.attributes['countcol'].value;
+                var val = 0;
+                j('input[colid=' + colIndex + ']').each(function(index2, obj2) {
+                    if (obj2.value != '' && obj2.value != null && obj2.value != 'undefined' && obj2.value.length != 0) {
+                        val += parseInt(obj2.value);
+                    }
+                })
+                if (val != 0) {
+                    obj.value = val;
+                    totalSum += val;
+                } else {
+                    obj.value = '';
+                }
+            });
 
-	j('input.rowsum').each(function(index,obj){
-		var colIndex = obj.attributes['countrow'].value;
-		var val = 0;
-		j('input[rowid='+colIndex+']').each(function(index2,obj2){
-			if(obj2.value!='' && obj2.value!=null && obj2.value!='undefined' && obj2.value.length!=0){
-				val+=parseInt(obj2.value);
-			}
-		})
-		if(val!=0){
-			obj.value=val;
-		}else{
-			obj.value='';
-		}
-	});
-	//var a = j('#totalSum');
-	if(totalSum!=0){
-		j('#totalSum')[0].value=totalSum;
-	}else{
-		j('#totalSum')[0].value='';
-	}
-}
-</script>
-<style>
-.input{
-	width:60px
-}
-</style>
+            j('input.rowsum').each(function(index, obj) {
+                var colIndex = obj.attributes['countrow'].value;
+                var val = 0;
+                j('input[rowid=' + colIndex + ']').each(function(index2, obj2) {
+                    if (obj2.value != '' && obj2.value != null && obj2.value != 'undefined' && obj2.value.length != 0) {
+                        val += parseInt(obj2.value);
+                    }
+                })
+                if (val != 0) {
+                    obj.value = val;
+                } else {
+                    obj.value = '';
+                }
+            });
+            //var a = j('#totalSum');
+            if (totalSum != 0) {
+                j('#totalSum')[0].value = totalSum;
+            } else {
+                j('#totalSum')[0].value = '';
+            }
+        }
+    </script>
+    <style>
+        .input {
+            width: 60px
+        }
+    </style>
 </HEAD>
 
 <BODY BGCOLOR="white">
 <div style="text-align:center;valign:middle;font-size:26px"><p><b>录入月度合并各部门销售清单(${year}年${month}月)</b></p></div>
 <br><br>
-<div style="text-align:center;valign:middle;"><input type="button" value="上月" onclick="gotoPrevMonth()">&nbsp;&nbsp;&nbsp;<input type="button" value="本月" onclick="gotoCurrMonth()">&nbsp;&nbsp;&nbsp;<input type="button" value="下月" onclick="gotoNextMonth()">&nbsp;&nbsp;&nbsp;<select id='syear'>
-#foreach($y in [2011..2012])
-<option value='$y'
-#if($year == $y)
-selected
-#end
->$y</option>
-#end
+
+<div style="text-align:center;valign:middle;"><input type="button" value="上月" onclick="gotoPrevMonth()">&nbsp;&nbsp;&nbsp;<input
+        type="button" value="本月" onclick="gotoCurrMonth()">&nbsp;&nbsp;&nbsp;<input type="button" value="下月"
+                                                                                    onclick="gotoNextMonth()">&nbsp;&nbsp;&nbsp;<select
+        id='syear'>
+    #foreach($y in [2011..2012])
+        <option value='$y'
+            #if($year == $y)
+                selected
+            #end
+                >$y</option>
+    #end
 </select>年<select id='smonth'>
-#foreach($i in[1..12])
-<option value='$i'
-#if($month == $i)
-selected
-#end
->$i</option>
-#end
-</select>月<input type="button" value="跳转" onclick="gotoMonth()">&nbsp;&nbsp;&nbsp;<a href='Index.showInputGrid4Year'>查看年度</a></div>
-<div style="text-align:center;valign:middle;">
-<table border=1>
-<tr>
-<td>&nbsp;</td><td>&nbsp;</td>
-#foreach (${aad} in ${aads})
-<td>${aad.areaName}</td>
-#end
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td>岗位及职务</td><td>姓名</td>
-#foreach (${aad} in ${aads})
-<td>${aad.drinkName}</td>
-#end
-<td>合计</td>
-</tr>
-#foreach (${gau} in ${gaus})
-#set($userid=${gau.id})
-<tr>
-<td>${gau.groupName}</td><td>${gau.userName}</td>
-#foreach (${aad} in ${aads})
-#set($drinkid=${aad.id})
-<td><input class="input" type='text' id='${gau.id}_${aad.id}' rowid='${gau.id}' colid='${aad.id}' value='$!urdMap.get("$userid").get("$drinkid")' onblur="javascript:changeDD(this);sum();"></td>
-#end
-<td><input class="input rowsum" type='text' countrow='${gau.id}' value='' readonly></td>
-</tr>
-#end
-<tr>
-<td>&nbsp;</td><td>合计</td>
-#foreach (${aad} in ${aads})
-<td><input class="input colsum" type='text' countcol='${aad.id}' value='' readonly></td>
-#end
-<td><input class="input" type='text' id='totalSum' value='' readonly></td>
-</tr>
-</table>
+    #foreach($i in[1..12])
+        <option value='$i'
+            #if($month == $i)
+                selected
+            #end
+                >$i</option>
+    #end
+</select>月<input type="button" value="跳转" onclick="gotoMonth()">&nbsp;&nbsp;&nbsp;<a href='Index.showInputGrid4Year'>查看年度</a>
 </div>
 <div style="text-align:center;valign:middle;">
-导出  ---->   <a href='Index.exportExcel'>导出本月</a>&nbsp;&nbsp;&nbsp;<a href='Index.exportExcel4Currency'>导出1-本月</a></div>
+    <table border=1>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            #foreach (${aad} in ${aads})
+                <td>${aad.areaName}</td>
+            #end
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>岗位及职务</td>
+            <td>姓名</td>
+            #foreach (${aad} in ${aads})
+                <td>${aad.drinkName}</td>
+            #end
+            <td>合计</td>
+        </tr>
+        #foreach (${gau} in ${gaus})
+            #set($userid=${gau.id})
+            <tr>
+                <td>${gau.groupName}</td>
+                <td>${gau.userName}</td>
+                #foreach (${aad} in ${aads})
+                    #set($drinkid=${aad.id})
+                    <td><input class="input" type='text' id='${gau.id}_${aad.id}' rowid='${gau.id}' colid='${aad.id}'
+                               value='$!urdMap.get("$userid").get("$drinkid")'
+                               onblur="javascript:changeDD(this);sum();"></td>
+                #end
+                <td><input class="input rowsum" type='text' countrow='${gau.id}' value='' readonly></td>
+            </tr>
+        #end
+        <tr>
+            <td>&nbsp;</td>
+            <td>合计</td>
+            #foreach (${aad} in ${aads})
+                <td><input class="input colsum" type='text' countcol='${aad.id}' value='' readonly></td>
+            #end
+            <td><input class="input" type='text' id='totalSum' value='' readonly></td>
+        </tr>
+    </table>
+</div>
+<div style="text-align:center;valign:middle;">
+    导出 ----> <a href='Index.exportExcel?year=$year&month=$month'>导出本月</a>&nbsp;&nbsp;&nbsp;<a href='Index.exportExcel4Currency?year=$year&month=$month'>导出1-本月</a></div>
 </div>
 </BODY>
 

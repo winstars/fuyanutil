@@ -1,0 +1,54 @@
+<HTML>
+<HEAD>
+    <TITLE>Login</TITLE>
+    <script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
+    <script language="javascript">
+
+        var j = jQuery.noConflict();
+
+        function login(){
+            var loginUserName = j("#username")[0].value;
+            var loginPwd = j("#password")[0].value;
+            j.post('/setting/Login.login', {
+                        loginUserName: loginUserName,
+                        loginPwd:loginPwd
+                    }, function(data) {
+                //alert(data);
+                if (data == "1") {
+                    window.location.href="/type1/Index.showInputGrid";
+                } else {
+                    alert("login error！");
+                }
+            });
+        }
+
+        function reset(){
+            j("#username")[0].value="";
+            j("#password")[0].value="";
+        }
+    </script>
+</HEAD>
+
+<BODY BGCOLOR="white">
+<div style="text-align:center;valign:middle;font-size:26px"><p><b>Login</b></p></div>
+<br><br>
+
+<div style="text-align:center;valign:middle;">
+    <table>
+        <tr>
+            <td>username</td>
+            <td><input type="text" id="username"></td>
+        </tr>
+        <tr>
+            <td>password</td>
+            <td><input type="password" id="password"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="ok" onclick="login()"></td>
+            <td><input type="reset" value="cancel" onclick="reset()"></td>
+        </tr>
+    </table>
+</div>
+</BODY>
+
+</HTML>

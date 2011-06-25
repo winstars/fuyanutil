@@ -1,76 +1,96 @@
 <HTML>
 <HEAD>
-<TITLE>部门人员设置</TITLE>
-<script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
-<script language="javascript">
+    <TITLE>部门人员设置</TITLE>
+    <script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
+    <script language="javascript">
 
-var j = jQuery.noConflict();
+        var j = jQuery.noConflict();
 
-function add() {
-	var inputGroupId = document.getElementById("inputGroupId").value;
-	var inputGroupName = document.getElementById("inputGroupName").value;
-	var inputUserName = document.getElementById("inputUserName").value;
-	var inputGroupType = document.getElementById("inputGroupType").value;
-	//document.location.href="Index.add?inputGroupId="+inputGroupId+"&inputGroupName="+inputGroupName+"&inputUserName="+inputUserName;
-	j.post('Index3.add', {
-		inputGroupId: inputGroupId,
-		inputGroupName: inputGroupName,
-		inputUserName:inputUserName,
-		inputGroupType:inputGroupType
-	}, function(data) {
-		//alert(data);
-		if(data=="1"){
-			window.location.reload()
-		}else{
-			alert("数据错误！");
-		}
-	});
+        function add() {
+            var inputGroupId = document.getElementById("inputGroupId").value;
+            var inputGroupName = document.getElementById("inputGroupName").value;
+            var inputUserName = document.getElementById("inputUserName").value;
+            var inputGroupType = document.getElementById("inputGroupType").value;
+            //document.location.href="Index.add?inputGroupId="+inputGroupId+"&inputGroupName="+inputGroupName+"&inputUserName="+inputUserName;
+            j.post('Index3.add', {
+                        inputGroupId: inputGroupId,
+                        inputGroupName: inputGroupName,
+                        inputUserName:inputUserName,
+                        inputGroupType:inputGroupType
+                    }, function(data) {
+                //alert(data);
+                if (data == "1") {
+                    window.location.reload()
+                } else {
+                    alert("数据错误！");
+                }
+            });
 
-}
+        }
 
-function del(id) {
-	//document.location.href="Index.del?id="+id;
-	j.post('Index3.del', {
-		id: id
-	}, function(data) {
-		//alert(data);
-		if(data=="1"){
-			window.location.reload()
-		}else{
-			alert("数据错误！");
-		}
-	});
-}
-</script>
+        function del(id) {
+            //document.location.href="Index.del?id="+id;
+            j.post('Index3.del', {
+                        id: id
+                    }, function(data) {
+                //alert(data);
+                if (data == "1") {
+                    window.location.reload()
+                } else {
+                    alert("数据错误！");
+                }
+            });
+        }
+    </script>
 </HEAD>
 
 <BODY BGCOLOR="white">
 <div style="text-align:center;valign:middle;font-size:26px"><p><b>部门人员设置</b></p></div>
 <br><br>
+
 <div style="text-align:center;valign:middle;">
-<table border=1>
-<tr>
-<td>序号</td><td>组号</td><td>组名</td><td>姓名</td><td>类型</td><td>操作</td>
-</tr>
-<tr>
-<td></td><td><input type="text" id="inputGroupId"></td><td><input type="text" id="inputGroupName"></td><td><input type="text" id="inputUserName"></td><td><select id="inputGroupType"><option value="1">后勤管理人员</option><option value="2">业务员</option><option value="3">门店人员</option></select></td><td><input type="button" id="add" value="添加" onclick="javascript:add();"></td>
-</tr>
-#foreach (${gau} in ${gaus})
-<tr>
-<td>${gau.id}</td><td>${gau.groupId}</td><td>${gau.groupName}</td><td>${gau.userName}</td><td>
-#if(${gau.groupType}==1)
-后勤管理人员
-#else
-#if(${gau.groupType}==2)
-业务员
-#else
-门店人员
-#end
-#end
-</td><td><input type="button" id="add" value="删除" onclick="javascript:del('${gau.id}');"></td>
-</tr>
-#end
-</table>
+    <table border=1>
+        <tr>
+            <td>序号</td>
+            <td>组号</td>
+            <td>组名</td>
+            <td>姓名</td>
+            <td>类型</td>
+            <td>操作</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="text" id="inputGroupId"></td>
+            <td><input type="text" id="inputGroupName"></td>
+            <td><input type="text" id="inputUserName"></td>
+            <td><select id="inputGroupType">
+                <option value="1">后勤管理人员</option>
+                <option value="2">业务员</option>
+                <option value="3">门店人员</option>
+            </select></td>
+            <td><input type="button" id="add" value="添加" onclick="javascript:add();"></td>
+        </tr>
+        #foreach (${gau} in ${gaus})
+            <tr>
+                <td>${gau.id}</td>
+                <td>${gau.groupId}</td>
+                <td>${gau.groupName}</td>
+                <td>${gau.userName}</td>
+                <td>
+                    #if(${gau.groupType}==1)
+                        后勤管理人员
+                    #else
+                        #if(${gau.groupType}==2)
+                            业务员
+                        #else
+                            门店人员
+                        #end
+                    #end
+                </td>
+                <td><input type="button" id="add" value="删除" onclick="javascript:del('${gau.id}');"></td>
+            </tr>
+        #end
+    </table>
 </div>
 </BODY>
 
