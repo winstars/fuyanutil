@@ -1,0 +1,9 @@
+06-26 01:26:16 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "USERDRINKDATA" not found; SQL statement:
+select ID,SYEAR,SMONTH,USERID,DRINKID,NUM from USERDRINKDATA where SYEAR='2011' and SMONTH='6' [42102-155]
+06-26 01:27:18 jdbc[2]: exception
+org.h2.jdbc.JdbcSQLException: Table "USERDRINKDATA" not found; SQL statement:
+select ID,SYEAR,SMONTH,USERID,DRINKID,NUM from USERDRINKDATA where SYEAR='2011' and SMONTH='6' [42102-155]
+06-26 01:44:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Table "USERDRINKDATA" not found; SQL statement:
+select ID,SYEAR,SMONTH,USERID,DRINKID,NUM from USERDRINKDATA where SYEAR='2011' and SMONTH='6' [42102-155]
