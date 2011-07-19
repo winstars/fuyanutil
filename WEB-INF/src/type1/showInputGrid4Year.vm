@@ -69,16 +69,111 @@
     </script>
     <style>
         .input {
-            width: 60px
+            width: 70px
+        }
+
+        div#DivContainer {
+            overflow: scroll;
+            border: solid 1px gray;
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th {
+            position: relative;
+            padding: 5px;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
+        }
+
+        td {
+            position: relative;
+            padding: 5px;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
+        }
+
+        td.Locked {
+            /* 水平与垂直方向锁住单元格, 不随鼠标或滚动条移动 */
+            z-index: 30;
+            position: relative;
+            top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
+            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+            background-color: #cccccc;
+            text-align: center;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
+        }
+
+        td.HLocked {
+            /* 水平方向锁住单元格 */
+            z-index: 10;
+            position: relative;
+            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+            background-color: #cccccc;
+            text-align: center;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
+        }
+
+        td.VLocked {
+            /* 垂直方向锁住单元格 */
+            z-index: 20;
+            position: relative;
+            top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
+            background-color: #cccccc;
+            text-align: center;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
+        }
+
+        th.Locked {
+            /* 水平与垂直方向锁住单元格, 不随鼠标或滚动条移动 */
+            z-index: 30;
+            position: relative;
+            top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
+            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+            background-color: #cccccc;
+            text-align: center;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
+        }
+
+        th.HLocked {
+            /* 水平方向锁住单元格 */
+            z-index: 10;
+            position: relative;
+            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+            background-color: #cccccc;
+            text-align: center;
+            border-top: solid 0px gray;
+            border-bottom: solid 1px gray;
+            border-left: solid 0px gray;
+            border-right: solid 1px gray;
         }
     </style>
 </HEAD>
 
 <BODY BGCOLOR="white">
-<div style="text-align:center;valign:middle;font-size:26px"><p><b>录入年度合并各部门销售清单(${year}年)</b></p></div>
+<div style="text-align:left;valign:middle;font-size:26px"><p><b>录入年度合并各部门销售清单(${year}年)</b></p></div>
 <br><br>
 
-<div style="text-align:center;valign:middle;"><input type="button" value="上年" onclick="gotoPrevYear()">&nbsp;&nbsp;&nbsp;<input
+<div style="text-align:left;valign:middle;"><input type="button" value="上年" onclick="gotoPrevYear()">&nbsp;&nbsp;&nbsp;<input
         type="button" value="本年" onclick="gotoCurrYear()">&nbsp;&nbsp;&nbsp;<input type="button" value="下年"
                                                                                    onclick="gotoNextYear()">&nbsp;&nbsp;&nbsp;<select
         id='syear'>
@@ -92,46 +187,47 @@
 </select>年<input type="button" value="跳转" onclick="gotoYear()">&nbsp;&nbsp;&nbsp;<a href='Index.showInputGrid'>查看月度</a>
 </div>
 </div>
-<div style="text-align:center;valign:middle;">
+<div style="overflow: auto;width:1000px;height:600px;" id="DivContainer">
     <table border=1>
         <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+            <td class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             #foreach (${aad} in ${aads})
-                <td>${aad.areaName}</td>
+                <td class="VLocked">${aad.areaName}</td>
             #end
-            <td>&nbsp;</td>
+
         </tr>
         <tr>
-            <td>岗位及职务</td>
-            <td>姓名</td>
+            <td class="Locked">岗位及职务</td>
+            <td class="Locked">姓名</td>
+            <td class="Locked">合计</td>
             #foreach (${aad} in ${aads})
-                <td>${aad.drinkName}</td>
+                <td class="VLocked">${aad.drinkName}</td>
             #end
-            <td>合计</td>
+        </tr>
+        <tr>
+            <td class="Locked">&nbsp;</td>
+            <td class="Locked">合计</td>
+            <td class="Locked"><input class="input" type='text' id='totalSum' value='' readonly></td>
+            #foreach (${aad} in ${aads})
+                <td class="VLocked"><input class="input colsum" type='text' countcol='${aad.id}' value='' readonly></td>
+            #end
         </tr>
         #foreach (${gau} in ${gaus})
             #set($userid=${gau.id})
             <tr>
-                <td>${gau.groupName}</td>
-                <td>${gau.userName}</td>
+                <td class="HLocked">${gau.groupName}</td>
+                <td class="HLocked">${gau.userName}</td>
+                <td class="HLocked"><input class="input rowsum" type='text' countrow='${gau.id}' value='' readonly></td>
                 #foreach (${aad} in ${aads})
                     #set($drinkid=${aad.id})
                     <td><input class="input" type='text' id='${gau.id}_${aad.id}' rowid='${gau.id}' colid='${aad.id}'
                                value='$!urdMap.get("$userid").get("$drinkid")'
                                onblur="javascript:changeDD(this);sum();"></td>
                 #end
-                <td><input class="input rowsum" type='text' countrow='${gau.id}' value='' readonly></td>
             </tr>
         #end
-        <tr>
-            <td>&nbsp;</td>
-            <td>合计</td>
-            #foreach (${aad} in ${aads})
-                <td><input class="input colsum" type='text' countcol='${aad.id}' value='' readonly></td>
-            #end
-            <td><input class="input" type='text' id='totalSum' value='' readonly></td>
-        </tr>
     </table>
 </div>
 </BODY>

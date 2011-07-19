@@ -1,205 +1,446 @@
 <HTML>
 <HEAD>
-    <TITLE>录入月度合并各部门销售清单(${year}年${month}月)</TITLE>
-    <script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
+<TITLE>录入月度合并各部门销售清单(${year}年${month}月)</TITLE>
+<script language="javascript" src="/js/jquery-1.6.1.min.js"></script>
 ##    <script language="javascript" src="/js/scroll-1.0.js"></script>
 
-    <script language="javascript">
-        var j = jQuery.noConflict();
-        function changeDD(obj) {
-            j.post('Index.update', {
-                id: obj.id,
-                num: obj.value,
-                year:${year},
-                month:${month}
-            }, function(data) {
-                //alert(data);
-                if (data == "1") {
-                    //window.location.reload()
-                } else {
-                    alert("数据错误！");
-                }
-            });
-        }
-
-        function gotoNextMonth() {
-            var currYear = ${year};
-            var currMonth = ${month};
-            if (currMonth == 12) {
-                currYear++;
-                currMonth = 1;
+<script language="javascript">
+    var j = jQuery.noConflict();
+    function changeDD(obj) {
+        j.post('Index.update', {
+            id: obj.id,
+            num: obj.value,
+            year:${year},
+            month:${month}
+        }, function(data) {
+            //alert(data);
+            if (data == "1") {
+                //window.location.reload()
             } else {
-                currMonth++;
+                alert("数据错误！");
             }
-            document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
-        }
+        });
+    }
 
-        function gotoPrevMonth() {
-            var currYear = ${year};
-            var currMonth = ${month};
-            if (currMonth == 1) {
-                currYear--;
-                currMonth = 12;
-            } else {
-                currMonth--;
-            }
-            document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+    function gotoNextMonth() {
+        var currYear = ${year};
+        var currMonth = ${month};
+        if (currMonth == 12) {
+            currYear++;
+            currMonth = 1;
+        } else {
+            currMonth++;
         }
+        document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+    }
 
-        function gotoCurrMonth() {
-            document.location.href = "Index.showInputGrid";
+    function gotoPrevMonth() {
+        var currYear = ${year};
+        var currMonth = ${month};
+        if (currMonth == 1) {
+            currYear--;
+            currMonth = 12;
+        } else {
+            currMonth--;
         }
+        document.location.href = "Index.showInputGrid?month=" + currMonth + "&year=" + currYear;
+    }
 
-        function gotoMonth() {
-            document.location.href = "Index.showInputGrid?month=" + j('#smonth')[0].value + "&year=" + j('#syear')[0].value;
-        }
+    function gotoCurrMonth() {
+        document.location.href = "Index.showInputGrid";
+    }
 
-        j(document).ready(function() {
+    function gotoMonth() {
+        document.location.href = "Index.showInputGrid?month=" + j('#smonth')[0].value + "&year=" + j('#syear')[0].value;
+    }
+
+    j(document).ready(function() {
 //            myScroll('maindiv',2,2,'maintable');
-            sum();
+        sum();
+        initCrossHairsTable("maintable",0,0,0,0);
+    });
+
+    function sum() {
+        var totalSum = 0;
+        j('input.colsum').each(function(index, obj) {
+            var colIndex = obj.attributes['countcol'].value;
+            var val = 0;
+            j('input[colid=' + colIndex + ']').each(function(index2, obj2) {
+                if (obj2.value != '' && obj2.value != null && obj2.value != 'undefined' && obj2.value.length != 0) {
+                    val += parseInt(obj2.value);
+                }
+            })
+            if (val != 0) {
+                obj.value = val;
+                totalSum += val;
+            } else {
+                obj.value = '';
+            }
         });
 
-        function sum() {
-            var totalSum = 0;
-            j('input.colsum').each(function(index, obj) {
-                var colIndex = obj.attributes['countcol'].value;
-                var val = 0;
-                j('input[colid=' + colIndex + ']').each(function(index2, obj2) {
-                    if (obj2.value != '' && obj2.value != null && obj2.value != 'undefined' && obj2.value.length != 0) {
-                        val += parseInt(obj2.value);
-                    }
-                })
-                if (val != 0) {
-                    obj.value = val;
-                    totalSum += val;
-                } else {
-                    obj.value = '';
+        j('input.rowsum').each(function(index, obj) {
+            var colIndex = obj.attributes['countrow'].value;
+            var val = 0;
+            j('input[rowid=' + colIndex + ']').each(function(index2, obj2) {
+                if (obj2.value != '' && obj2.value != null && obj2.value != 'undefined' && obj2.value.length != 0) {
+                    val += parseInt(obj2.value);
                 }
-            });
-
-            j('input.rowsum').each(function(index, obj) {
-                var colIndex = obj.attributes['countrow'].value;
-                var val = 0;
-                j('input[rowid=' + colIndex + ']').each(function(index2, obj2) {
-                    if (obj2.value != '' && obj2.value != null && obj2.value != 'undefined' && obj2.value.length != 0) {
-                        val += parseInt(obj2.value);
-                    }
-                })
-                if (val != 0) {
-                    obj.value = val;
-                } else {
-                    obj.value = '';
-                }
-            });
-            //var a = j('#totalSum');
-            if (totalSum != 0) {
-                j('#totalSum')[0].value = totalSum;
+            })
+            if (val != 0) {
+                obj.value = val;
             } else {
-                j('#totalSum')[0].value = '';
+                obj.value = '';
             }
-
-        }
-    </script>
-    <style>
-        .input {
-            width: 70px
-        }
-
-        div#DivContainer {
-            overflow: scroll;
-            border: solid 1px gray;
-            text-align: center;
+        });
+        //var a = j('#totalSum');
+        if (totalSum != 0) {
+            j('#totalSum')[0].value = totalSum;
+        } else {
+            j('#totalSum')[0].value = '';
         }
 
-        table {
-            border-collapse: collapse;
+    }
+</script>
+
+<script type="text/JavaScript">
+var hilightClass = "hoverHilight";
+var activeHilightClass = "activeCellHilight";
+
+var hilightActive = 1;
+var hilightCol = 1;
+var hilightRow = 1;
+var hilightTopHeader = 0;
+var hilightLeftHeader = 0;
+var hilightRightHeader = 0;
+var hilightBottomHeader = 0;
+var surroundActive = 0;
+function initCrossHairsTable(id, topPad, rightPad, bottomPad, leftPad) {
+    var tableObj = document.getElementById(id);
+    var c = tableObj.rows[0].cells.length - rightPad;
+    var r = tableObj.rows.length - bottomPad;
+
+    for (var i = topPad; i < r; i++) {
+        for (var j = leftPad; j < c; j++) {
+            if (!document.all) {
+                tableObj.rows[i].cells[j].setAttribute("onmouseover", "addHilight(this);");
+                tableObj.rows[i].cells[j].setAttribute("onmouseout", "removeHilight(this);");
+            }
+            else {
+                tableObj.rows[i].cells[j].onmouseover = function() {
+                    addHilight(this);
+                }
+                tableObj.rows[i].cells[j].onmouseout = function() {
+                    removeHilight(this);
+                }
+            }
+        }
+    }
+}
+function addHilight(cell) {
+    applyHilight(cell.parentNode.parentNode.parentNode,
+            cell.parentNode.rowIndex, cell.cellIndex, 1);
+}
+function removeHilight(cell) {
+    applyHilight(cell.parentNode.parentNode.parentNode,
+            cell.parentNode.rowIndex, cell.cellIndex, 0);
+}
+var oldRowClasses = "";
+var oldHeaderClasses = "";
+var oldCellClasses = new Array();
+function applyHilight(obj, rowIndex, colIndex, state) {
+
+    var W3CDOM = (document.createElement && document.getElementsByTagName);
+    if (!W3CDOM) {
+        alert("This script requires W3C DOM support")
+        return;
+    }
+    if (hilightClass == "") alert("Please set a hilight class.");
+    if (hilightRow) applyHilightRow(obj, rowIndex, colIndex, state);
+    if (hilightCol) applyHilightCol(obj, rowIndex, colIndex, state);
+    if (hilightTopHeader) applyHilightTopHeader(obj, rowIndex, colIndex, state);
+    if (hilightLeftHeader) applyHilightLeftHeader(obj, rowIndex, colIndex, state);
+    if (hilightRightHeader) applyHilightRightHeader(obj, rowIndex, colIndex, state);
+    if (hilightBottomHeader) applyHilightBottomFooter(obj, rowIndex, colIndex, state);
+    if (hilightActive) applyHilightActiveCell(obj, rowIndex, colIndex, state);
+
+    if (surroundActive) applySurroundActiveHilight(obj, rowIndex, colIndex, state);
+}
+function applyHilightLeftHeader(obj, rowIndex, colIndex, state) {
+    var classArray;
+    var rowClasses = "";
+
+    if (state == 1) {
+        obj.rows[rowIndex].cells[0].className += " " + hilightClass;
+    }
+    else {
+        classArray = obj.rows[rowIndex].cells[0].className.split(" ");
+        for (var i = 0; i < (classArray.length - 1); i++)
+            if (classArray[i] != "") rowClasses += " " + classArray[i];
+        obj.rows[rowIndex].cells[0].className = rowClasses;
+    }
+}
+function applyHilightRightHeader(obj, rowIndex, colIndex, state) {
+    var classArray;
+    var rowClasses = "";
+
+    if (state == 1) {
+        obj.rows[rowIndex].cells[obj.rows[rowIndex].cells.length - 1].className += " " + hilightClass;
+    }
+    else {
+        classArray = obj.rows[rowIndex].cells[obj.rows[rowIndex].cells.length - 1].className.split(" ");
+        for (var i = 0; i < (classArray.length - 1); i++)
+            if (classArray[i] != "") rowClasses += " " + classArray[i];
+        obj.rows[rowIndex].cells[obj.rows[rowIndex].cells.length - 1].className = rowClasses;
+    }
+}
+function applyHilightTopHeader(obj, rowIndex, colIndex, state) {
+    var classArray;
+    var colClasses = "";
+
+    if (state == 1) {
+        obj.rows[0].cells[colIndex].className += " " + hilightClass;
+    }
+    else {
+        classArray = obj.rows[0].cells[colIndex].className.split(" ");
+        for (var i = 0; i < (classArray.length - 1); i++)
+            if (classArray[i] != "") colClasses += " " + classArray[i];
+        obj.rows[0].cells[colIndex].className = colClasses;
+    }
+}
+function applyHilightBottomFooter(obj, rowIndex, colIndex, state) {
+    var classArray;
+    var colClasses = "";
+
+    if (state == 1) {
+        obj.rows[obj.rows.length - 1].cells[colIndex].className += " " + hilightClass;
+    }
+    else {
+        classArray = obj.rows[obj.rows.length - 1].cells[colIndex].className.split(" ");
+        for (var i = 0; i < (classArray.length - 1); i++)
+            if (classArray[i] != "") colClasses += " " + classArray[i];
+        obj.rows[obj.rows.length - 1].cells[colIndex].className = colClasses;
+    }
+}
+function applyHilightRow(obj, rowIndex, colIndex, state) {
+    if (state == 1) {
+        oldRowClasses = obj.rows[rowIndex].className;
+        obj.rows[rowIndex].className = hilightClass;
+    }
+    else {
+        obj.rows[rowIndex].className = oldRowClasses;
+    }
+}
+function applyHilightCol(obj, rowIndex, colIndex, state) {
+    var cellClasses = new Array();
+
+    if (state == 1) {
+        for (var i = 0; i < obj.rows.length; i++) {
+            cellClasses.push(obj.rows[i].cells[colIndex].className);
+            obj.rows[i].cells[colIndex].className += " " + hilightClass;
         }
 
-        th {
-            position: relative;
-            padding: 5px;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
+        oldCellClasses = cellClasses;
+    }
+    else {
+        oldCellClasses.reverse();
+        for (var i = 0; i < obj.rows.length; i++)
+            obj.rows[i].cells[colIndex].className = oldCellClasses.pop();
+    }
+}
+
+var oldActiveCellClasses;
+
+function applyHilightActiveCell(obj, rowIndex, colIndex, state) {
+    if (state == 1) {
+        oldActiveCellClasses = null;
+        oldActiveCellClasses = obj.rows[rowIndex].cells[colIndex].className;
+        obj.rows[rowIndex].cells[colIndex].className += " " + activeHilightClass;
+    }
+    else {
+        var oldClasses = oldActiveCellClasses.split(" ");
+        obj.rows[rowIndex].cells[colIndex].className = "";
+
+        for (var i = 0; i < oldClasses.length; i++) {
+            if (oldClasses[i] != hilightClass) obj.rows[rowIndex].cells[colIndex].className += " " + oldClasses[i];
+            oldActiveCellClasses = "";
+        }
+    }
+}
+
+function applySurroundActiveHilight(obj, rowIndex, colIndex, state) {
+
+    var surroundRadius = 1;
+    var radiusColor = "#c0dbff"
+    var cell;
+
+    if (!parseInt(surroundRadius)) return;
+
+    if (state == 1) {
+        for (var i = (rowIndex - surroundRadius); i <= (rowIndex + surroundRadius); i++) {
+            if (i < 0) continue;
+            if (!obj.rows[i]) continue;
+
+            for (var j = (colIndex - surroundRadius); j <= (colIndex + surroundRadius); j++) {
+                if (j < 0) continue;
+                if (!obj.rows[i].cells[j]) continue;
+
+                cell = obj.rows[i].cells[j].style
+                cell.backgroundColor = radiusColor;
+                cell.opacity = (.5);
+                cell.MozOpacity = (.5);
+                cell.KhtmlOpacity = (.5);
+                cell.filter = "alpha(opacity=50)";
+            }
         }
 
-        td {
-            position: relative;
-            padding: 5px;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
-        }
+        obj.rows[rowIndex].cells[colIndex].style.backgroundColor = "";
+    }
+    else {
+        for (var i = (rowIndex - surroundRadius); i <= (rowIndex + surroundRadius); i++) {
+            if (i < 0) continue;
+            if (!obj.rows[i]) continue;
 
-        td.Locked {
-            /* 水平与垂直方向锁住单元格, 不随鼠标或滚动条移动 */
-            z-index: 30;
-            position: relative;
-            top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
-            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
-            background-color: #cccccc;
-            text-align: center;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
-        }
+            for (var j = (colIndex - surroundRadius); j <= (colIndex + surroundRadius); j++) {
+                if (j < 0) continue;
+                if (!obj.rows[i].cells[j]) continue;
 
-        td.HLocked {
-            /* 水平方向锁住单元格 */
-            z-index: 10;
-            position: relative;
-            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
-            background-color: #cccccc;
-            text-align: center;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
+                cell = obj.rows[i].cells[j].style
+                cell.backgroundColor = "";
+                cell.opacity = (1);
+                cell.MozOpacity = (1);
+                cell.KhtmlOpacity = (1);
+                cell.filter = "alpha(opacity=100)";
+            }
         }
+    }
+}
 
-        td.VLocked {
-            /* 垂直方向锁住单元格 */
-            z-index: 20;
-            position: relative;
-            top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
-            background-color: #cccccc;
-            text-align: center;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
-        }
+</script>
+<style>
+    .input {
+        width: 70px
+    }
 
-        th.Locked {
-            /* 水平与垂直方向锁住单元格, 不随鼠标或滚动条移动 */
-            z-index: 30;
-            position: relative;
-            top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
-            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
-            background-color: #cccccc;
-            text-align: center;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
-        }
+    div#DivContainer {
+        overflow: scroll;
+        border: solid 1px gray;
+        text-align: center;
+    }
 
-        th.HLocked {
-            /* 水平方向锁住单元格 */
-            z-index: 10;
-            position: relative;
-            left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
-            background-color: #cccccc;
-            text-align: center;
-            border-top: solid 0px gray;
-            border-bottom: solid 1px gray;
-            border-left: solid 0px gray;
-            border-right: solid 1px gray;
-        }
-    </style>
+    table {
+        border-collapse: collapse;
+    }
+
+    th {
+        position: relative;
+        padding: 5px;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+
+    td {
+        position: relative;
+        padding: 5px;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+
+    td.Locked {
+        /* 水平与垂直方向锁住单元格, 不随鼠标或滚动条移动 */
+        z-index: 30;
+        position: relative;
+        top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
+        left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+        background-color: #cccccc;
+        text-align: center;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+
+    td.HLocked {
+        /* 水平方向锁住单元格 */
+        z-index: 10;
+        position: relative;
+        left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+        background-color: #cccccc;
+        text-align: center;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+
+    td.VLocked {
+        /* 垂直方向锁住单元格 */
+        z-index: 20;
+        position: relative;
+        top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
+        background-color: #cccccc;
+        text-align: center;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+
+    th.Locked {
+        /* 水平与垂直方向锁住单元格, 不随鼠标或滚动条移动 */
+        z-index: 30;
+        position: relative;
+        top: expression(parentNode.parentNode.parentNode.parentNode.scrollTop);
+        left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+        background-color: #cccccc;
+        text-align: center;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+
+    th.HLocked {
+        /* 水平方向锁住单元格 */
+        z-index: 10;
+        position: relative;
+        left: expression(parentNode.parentNode.parentNode.parentNode.scrollLeft);
+        background-color: #cccccc;
+        text-align: center;
+        border-top: solid 0px gray;
+        border-bottom: solid 1px gray;
+        border-left: solid 0px gray;
+        border-right: solid 1px gray;
+    }
+</style>
+<style>
+    .red {
+        color: red;
+        font-weight: bold;
+    }
+
+    .blue {
+        background-color: blue;
+    }
+
+        /* Used with crosshairs.js */
+    .hoverHilight {
+        background-color: #ffffc0;
+        cursor: pointer;
+    }
+
+    .activeCellHilight {
+        background-color: #c0dbff;
+        color: blue;
+    }
+
+    tr.alternate {
+        background-color: #efd;
+    }
+</style>
 </HEAD>
 
 <BODY BGCOLOR="white">
@@ -230,9 +471,9 @@
 <div style="overflow: auto;width:1000px;height:600px;" id="DivContainer">
     <table border=1 id="maintable">
         <tr>
-            <td style="width: 80px" class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td style="width: 80px" class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-            <td class="Locked">&nbsp;</td>
+            <td style="width: 80px" class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td style="width: 80px" class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td class="Locked">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
             #foreach (${aad} in ${aads})
                 <td class="VLocked">${aad.areaName}</td>
             #end
